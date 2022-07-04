@@ -1,9 +1,6 @@
 
 public class SlangWord {
 	
-	/*
-	 * Bill Pugh Singleton Implementation
-	 */
 	
 	private SlangWord() {
 		
