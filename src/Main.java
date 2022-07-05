@@ -20,7 +20,7 @@ public class Main {
 			if (option > menu.length || option < 1) {
 				System.out.println("Lựa chọn của bạn không có trong menu, mời bạn chọn lại");
 			}
-		}while (option > menu.length || option < 1);    
+		}while (option > menu.length || option < 1 );    
 		
 		
 		if (option == 1) { 
@@ -28,7 +28,29 @@ public class Main {
 			System.out.print("Mời bạn nhập vào slang world cần tìm kiếm: ");
 			String key  = keyboard.nextLine();
 			String result[][] = slangWord.findSlang(key);
-			System.out.println(result);
+			if ( result.length <= 0) {
+				System.out.println("Không có kết quả khớp với từ tìm kiếm");
+			}else {
+				System.out.println("Từ trùng khớp là ^.^ \n");
+				for (int j = 0; j < result.length; j++) {
+					System.out.println(j + " " + result[j][1]);
+				}
+			}
+		}
+		
+		if (option == 2) { 
+			keyboard.nextLine();
+			System.out.print("Mời bạn nhập vào định nghĩa slang world cần tìm kiếm: ");
+			String key  = keyboard.nextLine();
+			String result[][] = slangWord.findSlangWithDefinition(key);
+			if ( result.length <= 0) {
+				System.out.println("Không có kết quả khớp với từ tìm kiếm");
+			}else {
+				System.out.println("Từ trùng khớp là ^.^ \n");
+				for (int j = 0; j < result.length; j++) {
+					System.out.println(j + " " + result[j][1]);
+				}
+			}
 		}
 	}
 	

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.Map.Entry;
 
 public class SlangWord {
 	private TreeMap<String, List<String>> map = new TreeMap<>();
@@ -101,15 +102,44 @@ public class SlangWord {
 	}
 
 	public String[][] findSlang(String key) { 
-		String listData[][]  = getData();
-		String dataMap[][] = new String[sizeMap][3];
-		
+		String listData[][] = getData();
+		List<String[]> dataMap = new ArrayList<String[]>();
 		for (int i = 0; i < listData.length; i++) {
-			if ( listData[i][1].contains(key)) {
-				dataMap[dataMap.length] = listData[i];
+			if (listData[i][1].toLowerCase().contains(key.toLowerCase())) {
+				dataMap.add(listData[i]);
 			}
 		}
-		return dataMap;
+		int size = dataMap.size();
+		String s[][] = new String[size][3];
+
+		for (int i = 0; i < size; i++) {
+			s[i][0] = String.valueOf(i);
+			s[i][1] = dataMap.get(i)[1];
+			s[i][2] = dataMap.get(i)[2];
+		}
+		return s;		
+	}
+	
+	public String[][] findSlangWithDefinition(String key) { 
+		System.out.println("key" + key);
+		
+		String listData[][] = getData();
+		List<String[]> dataMap = new ArrayList<String[]>();
+		for (int i = 0; i < listData.length; i++) {
+			if (listData[i][2].toLowerCase().contains(key.toLowerCase())) {
+				dataMap.add(listData[i]);
+			}
+		}
+		
+		int size = dataMap.size();
+		String s[][] = new String[size][3];
+
+		for (int i = 0; i < size; i++) {
+			s[i][0] = String.valueOf(i);
+			s[i][1] = dataMap.get(i)[1];
+			s[i][2] = dataMap.get(i)[2];
+		}
+		return s;		
 	}
 	
 	public String[][] getMeaning(String key) {
@@ -125,7 +155,4 @@ public class SlangWord {
 		}
 		return s;
 	}
-	
-	
-	
 }
