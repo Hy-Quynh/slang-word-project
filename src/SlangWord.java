@@ -1,20 +1,19 @@
 import java.util.TreeMap;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.Map.Entry;
 
 public class SlangWord {
-	private TreeMap<String, List<String>> map = new TreeMap<>();
-	private static SlangWord obj = new SlangWord();// Early, instance will be created at load time
-	private int sizeMap;
+	List<String[]> slangMap = new ArrayList<String[]>();
+	private static SlangWord obj = new SlangWord();
 	private String FILE_SLANGWORD = "slang.txt";
 	private String FILE_ORIGINAL_SLANGWORD = "slangword-goc.txt";
 	private String FILE_HISTORY = "history.txt";
-	
 	
 	SlangWord() {
 		try {
@@ -42,70 +41,102 @@ public class SlangWord {
 	
 	
 	void readFile(String file) throws Exception {
-		map.clear();
-		String slag = null;
-		Scanner scanner = new Scanner(new File(file));
-		scanner.useDelimiter("`");
-		scanner.next();
-		String temp = scanner.next();
-		String[] part = temp.split("\n");
-		int i = 0;
-		int flag = 0;
-		sizeMap = 0;
-		
-		while (scanner.hasNext()) {
-			List<String> meaning = new ArrayList<String>();
-			slag = part[1].trim();
-			temp = scanner.next();
-			part = temp.split("\n");
-			if (map.containsKey(slag)) {
-				meaning = map.get(slag);
-			}
-			if (part[0].contains("|")) {
-				String[] d = (part[0]).split("\\|");
-				for (int ii = 0; ii < d.length; ii++)
-					System.out.println(d[ii]);
-				Collections.addAll(meaning, d);
-				sizeMap += d.length - 1;
-			} else {
-				meaning.add(part[0]);
-			}
-			// map.put(slag.trim(), meaning);
-			map.put(slag, meaning);
-			i++;
-			sizeMap++;
-		}
-		scanner.close();
+		slangMap.clear();
+		File myObj = new File(file);
+	    Scanner myReader = new Scanner(myObj);
+	    while (myReader.hasNextLine()) {
+	        String data = myReader.nextLine();
+	        String[] slangAndMeaning = data.split("`");
+	        List<String> slangMeaning = new ArrayList<String>();
+	        
+	        if ( slangAndMeaning.length > 1) {
+	        	String meaning[] = slangAndMeaning[1].split("\\|");
+	        	if(meaning.length > 0) {
+	        		for(int ii=0 ;ii < meaning.length; ii++) {
+	        			String[] slang = new String[2];
+	        			slang[0] = slangAndMeaning[0];
+	        			slang[1] = meaning[ii].trim();
+	        			slangMap.add(slang);
+	        		}
+	        	}
+	        }
+	        
+	        if ( slangAndMeaning.length == 1 ) {
+	        	String[] slang = new String[2];
+    			slang[0] = slangAndMeaning[0];
+    			slang[1] = "";
+    			slangMap.add(slang);	
+	        }
+	    }
+	    myReader.close();
 	}
 	
 	public String[][] getData() {
-		String s[][] = new String[sizeMap][3];
-		Set<String> slagListSet = map.keySet();
-		Object[] slagList = slagListSet.toArray();
-		int index = 0;
-		
-		for (int i = 0; i < sizeMap; i++) {
+		String s[][] = new String[slangMap.size()][3];
+		for (int i = 0; i < slangMap.size(); i++) {
 			s[i][0] = String.valueOf(i);
-			s[i][1] = (String) slagList[index];
-			List<String> meaning = map.get(slagList[index]);
-			s[i][2] = meaning.get(0);
-			for (int j = 1; j < meaning.size(); j++) {
-				if (i < sizeMap)
-					i++;
-				s[i][0] = String.valueOf(i);
-				s[i][1] = (String) slagList[index];
-				s[i][2] = meaning.get(j);
+			s[i][1] = (String) slangMap.get(i)[0];
+			s[i][2] = (String) slangMap.get(i)[1];
+		}
+		return s;
+	}
+	
+	boolean checkSlangExistHistory(String[] slang) throws Exception {
+		String[][] listHistory = readHistory();
+		
+		for(int i=0; i< listHistory.length; i++ ) {
+			if ( slang[1].trim().equals(listHistory[i][0].trim()) && slang[2].trim().equals(listHistory[i][1].trim())) {
+				return true;
 			}
-			index++;
+		}
+		return false;
+	}
+	
+	public String[][] readHistory() throws Exception {
+		File myObj = new File(FILE_HISTORY);
+	    Scanner myReader = new Scanner(myObj);
+	    List<String[]> history = new ArrayList<String[]>();
+	    
+	    while (myReader.hasNextLine()) {
+	        String data = myReader.nextLine();
+	        String[] slangAndMeaning = data.split("`");
+	        String[] slangWord = new String[2];
+	        slangWord[0] = slangAndMeaning[0].trim();
+	        slangWord[1] = "";
+	        if ( slangAndMeaning.length > 1 ) {
+	        	slangWord[1] = slangAndMeaning[1].trim();
+	        }	
+	        history.add(slangWord);
+	    }
+	    myReader.close();
+	    
+	    String s[][] = new String[history.size()][2];
+		for (int i = 0; i < history.size(); i++) {
+			s[i][0] = (String) history.get(i)[0];
+			s[i][1] = (String) history.get(i)[1];
 		}
 		return s;
 	}
 
-	public String[][] findSlang(String key) { 
-		String listData[][] = getData();
+	
+	public void saveHistory(String[][] slangWord) throws Exception {
+		File file = new File(FILE_HISTORY);
+		FileWriter fr = new FileWriter(file, true);
+		
+		for(int i =0; i < slangWord.length; i++ ) {
+			boolean checkExist = checkSlangExistHistory(slangWord[i]);
+			if ( !checkExist ) {
+				fr.write(slangWord[i][1].trim() + "`" + slangWord[i][2].trim() + "\n");
+			}
+		}
+		fr.close();
+	}
+	
+	public String[][] findSlang(String key) throws Exception { 
+		String[][] listData = getData();
 		List<String[]> dataMap = new ArrayList<String[]>();
 		for (int i = 0; i < listData.length; i++) {
-			if (listData[i][1].toLowerCase().contains(key.toLowerCase())) {
+			if (listData[i][1].toLowerCase().trim().contains(key.toLowerCase().trim())) {
 				dataMap.add(listData[i]);
 			}
 		}
@@ -121,12 +152,10 @@ public class SlangWord {
 	}
 	
 	public String[][] findSlangWithDefinition(String key) { 
-		System.out.println("key" + key);
-		
 		String listData[][] = getData();
 		List<String[]> dataMap = new ArrayList<String[]>();
 		for (int i = 0; i < listData.length; i++) {
-			if (listData[i][2].toLowerCase().contains(key.toLowerCase())) {
+			if (listData[i][2].toLowerCase().trim().contains(key.toLowerCase().trim())) {
 				dataMap.add(listData[i]);
 			}
 		}
@@ -142,17 +171,16 @@ public class SlangWord {
 		return s;		
 	}
 	
-	public String[][] getMeaning(String key) {
-		List<String> listMeaning = map.get(key);
-		if (listMeaning == null)
-			return null;
-		int size = listMeaning.size();
-		String s[][] = new String[size][3];
-		for (int i = 0; i < size; i++) {
-			s[i][0] = String.valueOf(i);
-			s[i][1] = key;
-			s[i][2] = listMeaning.get(i);
-		}
-		return s;
+	void addNewSlangWord(String key, String meaning) throws Exception {
+		File file = new File(FILE_SLANGWORD);
+		FileWriter fr = new FileWriter(file, true);
+		fr.write(key.trim() + "`" + meaning.trim() + "\n");
+		fr.close();
+		
+		String[] newSlang = new String[2];
+		newSlang[0] = key;
+		newSlang[1] = meaning;
+		slangMap.add(newSlang);
 	}
+	
 }

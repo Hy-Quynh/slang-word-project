@@ -7,9 +7,9 @@ public class Main {
 		
 		int option = 0;
 		String[] menu = {"1. Tìm kiếm theo slang word.", "2. Tìm kiếm theo definition.", "3. Hiển thị history.",
-				"4. Hiển thị history.", "5. Thêm 1 slang words.", "6. Sửa 1 slang words.", "7. Xoá 1 slang word.",
-				"8. Reset danh sách slang words gốc.", "9. Tạo ngẫu nhiên 1 slang word", "10. Đố vui - Hiển thị 1 random slang word", 
-				"11. Đố vui - Hiển thị 1 definition"};
+				"4. Thêm 1 slang words.", "5. Sửa 1 slang words.", "6. Xoá 1 slang word.",
+				"7. Reset danh sách slang words gốc.", "8. Tạo ngẫu nhiên 1 slang word", "9. Đố vui - Hiển thị 1 random slang word", 
+				"10. Đố vui - Hiển thị 1 definition"};
 		do{    
 			for (int i = 0; i < menu.length; i++) {
 				  System.out.println(menu[i]);
@@ -20,6 +20,7 @@ public class Main {
 			if (option > menu.length || option < 1) {
 				System.out.println("Lựa chọn của bạn không có trong menu, mời bạn chọn lại");
 			}
+			
 		}while (option > menu.length || option < 1 );    
 		
 		
@@ -27,14 +28,22 @@ public class Main {
 			keyboard.nextLine();
 			System.out.print("Mời bạn nhập vào slang world cần tìm kiếm: ");
 			String key  = keyboard.nextLine();
-			String result[][] = slangWord.findSlang(key);
-			if ( result.length <= 0) {
-				System.out.println("Không có kết quả khớp với từ tìm kiếm");
-			}else {
-				System.out.println("Từ trùng khớp là ^.^ \n");
-				for (int j = 0; j < result.length; j++) {
-					System.out.println(j + " " + result[j][1]);
+			String result[][];
+			try {
+				result = slangWord.findSlang(key);
+				if ( result.length <= 0) {
+					System.out.println("Không có kết quả khớp với từ tìm kiếm");
+				}else {
+					System.out.println("\n----------------------Từ trùng khớp là ^.^ ----------------------\n");
+					for (int j = 0; j < result.length; j++) {
+						System.out.println(j + "    " + result[j][1].trim() + "    " + result[j][2].trim());
+					}
+					slangWord.saveHistory(result);
+					
 				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
@@ -44,12 +53,47 @@ public class Main {
 			String key  = keyboard.nextLine();
 			String result[][] = slangWord.findSlangWithDefinition(key);
 			if ( result.length <= 0) {
-				System.out.println("Không có kết quả khớp với từ tìm kiếm");
+				System.out.println("Không có từ slang có định nghĩa trùng khớp với từ tìm kiếm");
 			}else {
-				System.out.println("Từ trùng khớp là ^.^ \n");
+				System.out.println("\n--------Từ slang word có định nghĩa trùng khớp với từ vừa nhập là ^.^ --------\n");
 				for (int j = 0; j < result.length; j++) {
-					System.out.println(j + " " + result[j][1]);
+					System.out.println(j + "    " + result[j][1].trim() + "    " + result[j][2].trim());
 				}
+			}
+		}
+		
+		if (option == 3) {
+			keyboard.nextLine();
+			try {
+				String[][] history = slangWord.readHistory();
+				
+				if ( history.length <= 0) {
+					System.out.println("Chưa có kết quả tìm kiếm");
+				}else {
+					System.out.println("\n--------Từ Slang trong lịch sử tìm kiếm là ^.^ --------\n");
+					for (int j = 0; j < history.length; j++) {
+						System.out.println(j + "    " + history[j][0].trim() + "    " + history[j][1].trim());
+					}
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if ( option == 4 ) {
+			keyboard.nextLine();
+			try {
+				System.out.print("Mời bạn nhập vào từ slang mới: ");
+				String key  = keyboard.nextLine();
+				System.out.print("Mời bạn nhập vào nghĩa từ slang: ");
+				String meaning  = keyboard.nextLine();
+				
+				slangWord.addNewSlangWord(key, meaning);
+				System.out.print("Đã thêm thành công");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
