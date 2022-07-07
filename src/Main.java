@@ -96,6 +96,38 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
+		
+		if ( option == 5 ) {
+			keyboard.nextLine();
+			try {
+				String meaning = "";
+				boolean haveChangeMeaning = false;
+				System.out.print("Mời bạn nhập vào từ slang cần sửa: ");
+				String oldKey  = keyboard.nextLine();
+				
+				boolean checkOldKey = slangWord.checkSlangExist(oldKey);
+				
+				if (checkOldKey) {
+					System.out.print("Mời bạn nhập vào từ slang mới: ");
+					String newKey  = keyboard.nextLine();
+					
+					keyboard.nextInt();
+					System.out.print("Bạn có muốn sửa nghĩa từ slang này không (1: Đồng ý, 0: Từ chối): ");
+					int choose = keyboard.nextInt();
+					if ( choose == 1 ) {
+						haveChangeMeaning = true;
+						keyboard.nextLine();
+						System.out.print("Mời bạn nhập vào nghĩa của từ: ");
+						meaning = keyboard.nextLine();
+					}
+				}else {
+					System.out.print("Không có từ slang phù hợp");
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public static void main(String[] args) {

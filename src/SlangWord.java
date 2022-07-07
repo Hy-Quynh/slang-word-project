@@ -183,4 +183,14 @@ public class SlangWord {
 		slangMap.add(newSlang);
 	}
 	
+	boolean checkSlangExist (String key) {
+		String s[][] = getData();
+		
+		for (int i = 0; i< s.length; i++) {
+			if ( s[i][1].equals(key) ) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
