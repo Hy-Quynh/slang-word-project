@@ -86,11 +86,17 @@ public class Main {
 			try {
 				System.out.print("Mời bạn nhập vào từ slang mới: ");
 				String key  = keyboard.nextLine();
-				System.out.print("Mời bạn nhập vào nghĩa từ slang: ");
-				String meaning  = keyboard.nextLine();
+				String[] checkKey = slangWord.checkSlangExist(key.trim());
 				
-				slangWord.addNewSlangWord(key, meaning);
-				System.out.print("Đã thêm thành công");
+				if (checkKey == null) {
+					System.out.print("Mời bạn nhập vào nghĩa từ slang: ");
+					String meaning  = keyboard.nextLine();
+					
+					slangWord.addNewSlangWord(key, meaning);
+					System.out.print("Đã thêm thành công");
+				}else {
+					System.out.print("Từ Slang đã tồn tại");
+				}				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -105,21 +111,26 @@ public class Main {
 				System.out.print("Mời bạn nhập vào từ slang cần sửa: ");
 				String oldKey  = keyboard.nextLine();
 				
-				boolean checkOldKey = slangWord.checkSlangExist(oldKey);
+				String[] checkOldKey = slangWord.checkSlangExist(oldKey);
 				
-				if (checkOldKey) {
+				if (checkOldKey != null) {
 					System.out.print("Mời bạn nhập vào từ slang mới: ");
 					String newKey  = keyboard.nextLine();
 					
-					keyboard.nextInt();
 					System.out.print("Bạn có muốn sửa nghĩa từ slang này không (1: Đồng ý, 0: Từ chối): ");
 					int choose = keyboard.nextInt();
+					
 					if ( choose == 1 ) {
 						haveChangeMeaning = true;
 						keyboard.nextLine();
 						System.out.print("Mời bạn nhập vào nghĩa của từ: ");
 						meaning = keyboard.nextLine();
+					}else {
+						meaning = checkOldKey[1];
 					}
+					String newSlangWord = newKey.trim() + "`" + meaning.trim() + "\n";
+					slangWord.editSlangWord(newSlangWord, oldKey);
+					System.out.print("Sửa thành công");
 				}else {
 					System.out.print("Không có từ slang phù hợp");
 				}

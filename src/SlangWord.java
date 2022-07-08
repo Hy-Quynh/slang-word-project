@@ -1,6 +1,11 @@
 import java.util.TreeMap;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -183,14 +188,39 @@ public class SlangWord {
 		slangMap.add(newSlang);
 	}
 	
-	boolean checkSlangExist (String key) {
+	String[] checkSlangExist (String key) {
 		String s[][] = getData();
 		
 		for (int i = 0; i< s.length; i++) {
 			if ( s[i][1].equals(key) ) {
-				return true;
+				String[] slang = new String[2];
+				slang[0] = s[i][1];
+				slang[1] = s[i][2];
+				return slang;
 			}
 		}
-		return false;
+		return null;
+	}
+	
+	void editSlangWord(String keyReplace, String slangWord) throws IOException {
+		BufferedReader file = new BufferedReader(new FileReader(FILE_SLANGWORD));
+        StringBuffer inputBuffer = new StringBuffer();
+        String line;
+
+        while ((line = file.readLine()) != null) {
+        	String[] slangAndMeaning = line.split("`");
+        	
+        	if ( slangAndMeaning[0].trim().equals(slangWord.trim())) {
+        		inputBuffer.append(keyReplace.trim());
+        	}else {
+        		inputBuffer.append(line);
+        	}
+            inputBuffer.append('\n');
+        }
+        
+        file.close();
+        FileOutputStream fileOut = new FileOutputStream(FILE_SLANGWORD);
+        fileOut.write(inputBuffer.toString().getBytes());
+        fileOut.close();
 	}
 }
