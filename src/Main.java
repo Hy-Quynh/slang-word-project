@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -107,7 +108,6 @@ public class Main {
 			keyboard.nextLine();
 			try {
 				String meaning = "";
-				boolean haveChangeMeaning = false;
 				System.out.print("Mời bạn nhập vào từ slang cần sửa: ");
 				String oldKey  = keyboard.nextLine();
 				
@@ -121,7 +121,6 @@ public class Main {
 					int choose = keyboard.nextInt();
 					
 					if ( choose == 1 ) {
-						haveChangeMeaning = true;
 						keyboard.nextLine();
 						System.out.print("Mời bạn nhập vào nghĩa của từ: ");
 						meaning = keyboard.nextLine();
@@ -139,6 +138,28 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
+		
+		if ( option == 6 ) {
+			keyboard.nextLine();
+			System.out.print("Mời bạn nhập vào từ slang cần xoá: ");
+			String oldKey  = keyboard.nextLine();
+			
+			String[] checkOldKey = slangWord.checkSlangExist(oldKey);
+			
+			if (checkOldKey != null) {
+				try {
+					slangWord.deleteSlangWord(oldKey);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else {
+				System.out.print("Không có từ slang phù hợp");
+			}
+			
+		}
+		
+		
 	}
 	
 	public static void main(String[] args) {

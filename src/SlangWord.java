@@ -1,5 +1,6 @@
 import java.util.TreeMap;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -17,7 +18,7 @@ public class SlangWord {
 	List<String[]> slangMap = new ArrayList<String[]>();
 	private static SlangWord obj = new SlangWord();
 	private String FILE_SLANGWORD = "slang.txt";
-	private String FILE_ORIGINAL_SLANGWORD = "slangword-goc.txt";
+	private String TEMPFILE_SLANGWORD = "tempfile-slang.txt";
 	private String FILE_HISTORY = "history.txt";
 	
 	SlangWord() {
@@ -25,8 +26,8 @@ public class SlangWord {
 			String current = new java.io.File(".").getCanonicalPath();
 			System.out.println("Current dir:" + current);
 			FILE_SLANGWORD = current + "//" + FILE_SLANGWORD;
-			FILE_ORIGINAL_SLANGWORD = current + "//" + FILE_ORIGINAL_SLANGWORD;
 			FILE_HISTORY = current + "//" + FILE_HISTORY;
+			TEMPFILE_SLANGWORD = current + "//" + TEMPFILE_SLANGWORD;
 			readFile(FILE_SLANGWORD);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -222,5 +223,28 @@ public class SlangWord {
         FileOutputStream fileOut = new FileOutputStream(FILE_SLANGWORD);
         fileOut.write(inputBuffer.toString().getBytes());
         fileOut.close();
+	}
+	
+	void deleteSlangWord(String slangWord) throws IOException {
+		File inputFile = new File(FILE_SLANGWORD);
+		File tempFile = new File(TEMPFILE_SLANGWORD);
+
+		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+		String currentLine;
+
+		while((currentLine = reader.readLine()) != null) {
+		    // trim newline when comparing with lineToRemove
+		    String trimmedLine = currentLine.trim();
+		    String[] slangAndMeaning = trimmedLine.split("`");
+		    if ( slangAndMeaning[0].trim().equals(slangWord.trim())) {
+		    	continue;
+		    }
+		    writer.write(currentLine + System.getProperty("line.separator"));
+		}
+		writer.close(); 
+		reader.close(); 
+		tempFile.renameTo(inputFile);
 	}
 }
