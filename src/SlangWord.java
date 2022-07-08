@@ -20,6 +20,7 @@ public class SlangWord {
 	private String FILE_SLANGWORD = "slang.txt";
 	private String TEMPFILE_SLANGWORD = "tempfile-slang.txt";
 	private String FILE_HISTORY = "history.txt";
+	private String BACKUP_FILE = "backup-file.txt";
 	
 	SlangWord() {
 		try {
@@ -28,7 +29,9 @@ public class SlangWord {
 			FILE_SLANGWORD = current + "//" + FILE_SLANGWORD;
 			FILE_HISTORY = current + "//" + FILE_HISTORY;
 			TEMPFILE_SLANGWORD = current + "//" + TEMPFILE_SLANGWORD;
+			BACKUP_FILE = current + "//" + BACKUP_FILE;
 			readFile(FILE_SLANGWORD);
+			initBackupFile();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -75,6 +78,22 @@ public class SlangWord {
 	        }
 	    }
 	    myReader.close();
+	}
+	
+	void initBackupFile() throws IOException {
+		File inputFile = new File(FILE_SLANGWORD);
+		File tempFile = new File(BACKUP_FILE);
+
+		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+		String currentLine;
+
+		while((currentLine = reader.readLine()) != null) {
+		    writer.write(currentLine + System.getProperty("line.separator"));
+		}
+		writer.close(); 
+		reader.close(); 
 	}
 	
 	public String[][] getData() {
@@ -246,5 +265,26 @@ public class SlangWord {
 		writer.close(); 
 		reader.close(); 
 		tempFile.renameTo(inputFile);
+	}
+	
+	void cloneBackupFileToSlangFile() throws IOException {
+		PrintWriter writer1 = new PrintWriter(FILE_SLANGWORD);
+		writer1.print("");
+		writer1.close();
+		
+		File inputFile = new File(BACKUP_FILE);
+		File tempFile = new File(FILE_SLANGWORD);
+
+		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+		String currentLine;
+
+		while((currentLine = reader.readLine()) != null) {
+		    writer.write(currentLine + System.getProperty("line.separator"));
+		}
+		writer.close(); 
+		reader.close(); 
+		
 	}
 }
