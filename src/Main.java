@@ -149,6 +149,7 @@ public class Main {
 			if (checkOldKey != null) {
 				try {
 					slangWord.deleteSlangWord(oldKey);
+					System.out.print("Bạn đã xoá thành công");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
