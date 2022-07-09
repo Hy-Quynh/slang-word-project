@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,14 +27,17 @@ public class SlangWord {
 	
 	SlangWord() {
 		try {
-			String current = new java.io.File(".").getCanonicalPath();
-			System.out.println(current);
-			FILE_SLANGWORD = current + "//src//" + FILE_SLANGWORD;
-			FILE_HISTORY = current +  "//src//" + FILE_HISTORY;
-			TEMPFILE_SLANGWORD = current +  "//src//" + TEMPFILE_SLANGWORD;
-			BACKUP_FILE = current +  "//src//" + BACKUP_FILE;
+			URL FILE_SLANGWORD_URL = getClass().getResource(FILE_SLANGWORD);	
+			FILE_SLANGWORD = FILE_SLANGWORD_URL.getPath();
+			
+			URL FILE_HISTORY_URL = getClass().getResource(FILE_HISTORY);
+			FILE_HISTORY = FILE_HISTORY_URL.getPath();
+
+			URL BACKUP_FILE_URL = getClass().getResource(BACKUP_FILE);
+			BACKUP_FILE = BACKUP_FILE_URL.getPath();
 			readFile(FILE_SLANGWORD);
 			initBackupFile();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -248,7 +252,6 @@ public class SlangWord {
         for(int i= 0; i < slangMap.size(); i++ ) {
         	String slangAndMeaning = slangMap.get(i)[0];
         	if ( slangAndMeaning.trim().equals(slangWord.trim())) {
-        		System.out.println("aaaaaaaaaaaaaa");
         		String s[] = new String[2];
         		s[0] = slangWord;
         		s[1] = meaning;
@@ -259,7 +262,8 @@ public class SlangWord {
 	
 	void deleteSlangWord(String slangWord) throws IOException {
 		File inputFile = new File(FILE_SLANGWORD);
-		File tempFile = new File(TEMPFILE_SLANGWORD);
+		URL TEMPFILE_SLANGWORD_URL = getClass().getResource(TEMPFILE_SLANGWORD);
+		File tempFile = new File(TEMPFILE_SLANGWORD_URL.getPath());
 
 		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
 		BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
