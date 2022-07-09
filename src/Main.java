@@ -7,19 +7,19 @@ public class Main {
 		SlangWord slangWord = new SlangWord();
 		String[] menu = {"1. Tìm kiếm theo slang word.", "2. Tìm kiếm theo definition.", "3. Hiển thị history.",
 				"4. Thêm 1 slang words.", "5. Sửa 1 slang words.", "6. Xoá 1 slang word.",
-				"7. Reset danh sách slang words gốc.", "8. Tạo ngẫu nhiên 1 slang word", "9. Đố vui - Hiển thị 1 random slang word", 
+				"7. Reset danh sách slang words gốc.", "8.Random ngẫu nhiên 1 slang word", "9. Đố vui - Hiển thị 1 random slang word", 
 				"10. Đố vui - Hiển thị 1 definition"};
 		int back = 0;
 		
+		 System.out.println("    -------MENU------     ");
 		do {
 			int option = 0;
 			do{    
 				for (int i = 0; i < menu.length; i++) {
 					  System.out.println(menu[i]);
 					}
-				 System.out.print("Mời bạn lựa chọn: ");
-				
-				option = keyboard.nextInt();
+				 System.out.print("Mời bạn lựa chọn tương ứng với số trên menu: ");
+				 option = keyboard.nextInt();
 				if (option > menu.length || option < 1) {
 					System.out.println("Lựa chọn của bạn không có trong menu, mời bạn chọn lại");
 				}
@@ -39,7 +39,7 @@ public class Main {
 					}else {
 						System.out.println("\n----------------------Từ trùng khớp là ^.^ ----------------------\n");
 						for (int j = 0; j < result.length; j++) {
-							System.out.println(j + "    " + result[j][1].trim() + "    " + result[j][2].trim());
+							System.out.println((j + 1) + "    " + result[j][1].trim() + "    " + result[j][2].trim());
 						}
 						slangWord.saveHistory(result);
 						
@@ -60,7 +60,7 @@ public class Main {
 				}else {
 					System.out.println("\n--------Từ slang word có định nghĩa trùng khớp với từ vừa nhập là ^.^ --------\n");
 					for (int j = 0; j < result.length; j++) {
-						System.out.println(j + "    " + result[j][1].trim() + "    " + result[j][2].trim());
+						System.out.println((j + 1) + "    " + result[j][1].trim() + "    " + result[j][2].trim());
 					}
 				}
 			}
@@ -75,7 +75,7 @@ public class Main {
 					}else {
 						System.out.println("\n--------Từ Slang trong lịch sử tìm kiếm là ^.^ --------\n");
 						for (int j = 0; j < history.length; j++) {
-							System.out.println(j + "    " + history[j][0].trim() + "    " + history[j][1].trim());
+							System.out.println((j + 1) + "    " + history[j][0].trim() + "    " + history[j][1].trim());
 						}
 					}
 				} catch (Exception e) {
@@ -130,7 +130,7 @@ public class Main {
 							meaning = checkOldKey[1];
 						}
 						String newSlangWord = newKey.trim() + "`" + meaning.trim() + "\n";
-						slangWord.editSlangWord(newSlangWord, oldKey);
+						slangWord.editSlangWord(newSlangWord, oldKey, meaning);
 						System.out.println("Sửa thành công");
 					}else {
 						System.out.println("Không có từ slang phù hợp");
@@ -172,6 +172,7 @@ public class Main {
 				if ( choose == 1 ) {
 					try {
 						slangWord.cloneBackupFileToSlangFile();
+						System.out.print("Backup dữ liệu thành công");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -185,8 +186,16 @@ public class Main {
 				System.out.println(word[0] + "    " + word[1]);
 			}
 			
+			if (option == 9 ) {
+				System.out.println("--------Bạn trả lời câu đố vui này nhé-----------"); 
+				slangWord.quizSlang();
+			}
+			
 			System.out.print("\nBạn muốn tiếp tục không? Tiếp tục (1), Kết thúc(0): ");
 			back = keyboard.nextInt();
+			if (back == 0 ) {
+				System.out.print("Chương trình đã kết thúc");
+			}
 			
 		}while(back != 0);
 	}

@@ -9,8 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -222,7 +224,7 @@ public class SlangWord {
 		return null;
 	}
 	
-	void editSlangWord(String keyReplace, String slangWord) throws IOException {
+	void editSlangWord(String keyReplace, String slangWord, String meaning) throws IOException {
 		BufferedReader file = new BufferedReader(new FileReader(FILE_SLANGWORD));
         StringBuffer inputBuffer = new StringBuffer();
         String line;
@@ -242,6 +244,17 @@ public class SlangWord {
         FileOutputStream fileOut = new FileOutputStream(FILE_SLANGWORD);
         fileOut.write(inputBuffer.toString().getBytes());
         fileOut.close();
+        
+        for(int i= 0; i < slangMap.size(); i++ ) {
+        	String slangAndMeaning = slangMap.get(i)[0];
+        	if ( slangAndMeaning.trim().equals(slangWord.trim())) {
+        		System.out.println("aaaaaaaaaaaaaa");
+        		String s[] = new String[2];
+        		s[0] = slangWord;
+        		s[1] = meaning;
+        		slangMap.set(i, s);
+        	}
+        }
 	}
 	
 	void deleteSlangWord(String slangWord) throws IOException {
@@ -265,6 +278,15 @@ public class SlangWord {
 		writer.close(); 
 		reader.close(); 
 		tempFile.renameTo(inputFile);
+		
+		int indexSlang = 0;
+		for(int i= 0; i < slangMap.size(); i++ ) {
+	        String slangAndMeaning = slangMap.get(i)[0];
+	        if ( slangAndMeaning.trim().equals(slangWord.trim())) {
+	        	indexSlang = i;
+	        }
+		}
+		slangMap.remove(indexSlang);
 	}
 	
 	void cloneBackupFileToSlangFile() throws IOException {
@@ -308,5 +330,28 @@ public class SlangWord {
 	
 	public static int randInt(int minimum, int maximum) {
 		return (minimum + (int) (Math.random() * maximum));
+	}
+	
+	void quizSlang() {
+		String[] randomString = randomSlangWord();
+		List<String[]> listRandomQuiz = new ArrayList<String[]>();
+		
+		listRandomQuiz.add(randomString);
+		for(int i=0; i< 3; i++) {
+			listRandomQuiz.add(randomSlangWord());
+		}
+
+		System.out.println("Cho biết nghĩa của từ Slang sau " + listRandomQuiz.get(0)[0]);
+		for(int i =0 ;i< listRandomQuiz.size(); i++ ) {
+			System.out.println((i + 1) + " " + listRandomQuiz.get(i)[1]);
+		}	
+		System.out.println("Đáp án chính xác là: ");
+		int choose = new Scanner(System.in).nextInt();
+		if ( choose == 1 ) {
+			System.out.println("Bạn trả lời chính xác");
+		}else {
+			System.out.println("Bạn trả lời sai mất rồi");
+		}
+		
 	}
 }
