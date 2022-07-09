@@ -287,4 +287,26 @@ public class SlangWord {
 		reader.close(); 
 		
 	}
+	
+	public String[] randomSlangWord() {
+		// Random a number
+		int minimun = 0;
+		int maximun = slangMap.size() - 1;
+		int rand = randInt(minimun, maximun);
+		// Get slang meaning
+		String s[] = new String[2];
+		for(int i=0; i<slangMap.size(); i++) {
+			// System.out.println(key);
+			if (i == rand) {
+				s[0] = slangMap.get(i)[0];
+				s[1] = slangMap.get(i)[1];
+				break;
+			}
+		}
+		return s;
+	}
+	
+	public static int randInt(int minimum, int maximum) {
+		return (minimum + (int) (Math.random() * maximum));
+	}
 }

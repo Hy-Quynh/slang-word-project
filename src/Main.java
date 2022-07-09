@@ -145,19 +145,23 @@ public class Main {
 				keyboard.nextLine();
 				System.out.print("Mời bạn nhập vào từ slang cần xoá: ");
 				String oldKey  = keyboard.nextLine();
+				System.out.print("Bạn có chắc chắn xoá từ slang (1: Đồng ý, 0: Từ chối): ");
+				int choose = keyboard.nextInt();
 				
-				String[] checkOldKey = slangWord.checkSlangExist(oldKey);
-				
-				if (checkOldKey != null) {
-					try {
-						slangWord.deleteSlangWord(oldKey);
-						System.out.println("Bạn đã xoá thành công");
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				if ( choose == 1 ) {
+					String[] checkOldKey = slangWord.checkSlangExist(oldKey);
+					
+					if (checkOldKey != null) {
+						try {
+							slangWord.deleteSlangWord(oldKey);
+							System.out.println("Bạn đã xoá thành công");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}else {
+						System.out.println("Không có từ slang phù hợp");
 					}
-				}else {
-					System.out.println("Không có từ slang phù hợp");
 				}
 			}
 			
@@ -175,7 +179,13 @@ public class Main {
 				}
 			}
 			
-			System.out.print("Bạn muốn tiếp tục không? Tiếp tục (1), Kết thúc(0): ");
+			if (option == 8 ) {
+				System.out.println("--------Từ Slang được random là-----------"); 
+				String word[] = slangWord.randomSlangWord();
+				System.out.println(word[0] + "    " + word[1]);
+			}
+			
+			System.out.print("\nBạn muốn tiếp tục không? Tiếp tục (1), Kết thúc(0): ");
 			back = keyboard.nextInt();
 			
 		}while(back != 0);
