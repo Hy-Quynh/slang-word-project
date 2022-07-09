@@ -27,11 +27,11 @@ public class SlangWord {
 	SlangWord() {
 		try {
 			String current = new java.io.File(".").getCanonicalPath();
-			System.out.println("Current dir:" + current);
-			FILE_SLANGWORD = current + "//" + FILE_SLANGWORD;
-			FILE_HISTORY = current + "//" + FILE_HISTORY;
-			TEMPFILE_SLANGWORD = current + "//" + TEMPFILE_SLANGWORD;
-			BACKUP_FILE = current + "//" + BACKUP_FILE;
+			System.out.println(current);
+			FILE_SLANGWORD = current + "//src//" + FILE_SLANGWORD;
+			FILE_HISTORY = current +  "//src//" + FILE_HISTORY;
+			TEMPFILE_SLANGWORD = current +  "//src//" + TEMPFILE_SLANGWORD;
+			BACKUP_FILE = current +  "//src//" + BACKUP_FILE;
 			readFile(FILE_SLANGWORD);
 			initBackupFile();
 		} catch (Exception e) {
