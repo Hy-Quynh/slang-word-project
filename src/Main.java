@@ -7,11 +7,12 @@ public class Main {
 		SlangWord slangWord = new SlangWord();
 		String[] menu = {"1. Tìm kiếm theo slang word.", "2. Tìm kiếm theo definition.", "3. Hiển thị history.",
 				"4. Thêm 1 slang words.", "5. Sửa 1 slang words.", "6. Xoá 1 slang word.",
-				"7. Reset danh sách slang words gốc.", "8.Random ngẫu nhiên 1 slang word", "9. Đố vui - Hiển thị 1 random slang word", 
+				"7. Reset danh sách slang words gốc.", "8. Random ngẫu nhiên 1 slang word", "9. Đố vui - Hiển thị 1 random slang word", 
 				"10. Đố vui - Hiển thị 1 definition"};
 		int back = 0;
 		
 		 System.out.println("    -------MENU------     ");
+		 
 		do {
 			int option = 0;
 			do{    
@@ -189,6 +190,11 @@ public class Main {
 			if (option == 9 ) {
 				System.out.println("--------Bạn trả lời câu đố vui này nhé-----------"); 
 				slangWord.quizSlang();
+			}
+			
+			if (option == 10 ) {
+				System.out.println("--------Bạn trả lời câu đố vui này nhé-----------"); 
+				slangWord.quizDefinition();
 			}
 			
 			System.out.print("\nBạn muốn tiếp tục không? Tiếp tục (1), Kết thúc(0): ");

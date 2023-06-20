@@ -1,4 +1,3 @@
-Slag`Meaning
 #1`Number one
 $`Dollar| money
 $_$`Has money
@@ -7659,3 +7658,4 @@ ZZZ`Sleepy| bored| tired
 }:-)`Devilish smile
 ~`Denotes Sarcasm| Put At The End Of A Word To Make It Longer
 Æ`Registered Trademark Symbol
+YUT2`New YUT2

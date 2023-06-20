@@ -20,21 +20,13 @@ import java.util.Set;
 public class SlangWord {
 	List<String[]> slangMap = new ArrayList<String[]>();
 	private static SlangWord obj = new SlangWord();
-	private String FILE_SLANGWORD = "slang.txt";
-	private String TEMPFILE_SLANGWORD = "tempfile-slang.txt";
-	private String FILE_HISTORY = "history.txt";
-	private String BACKUP_FILE = "backup-file.txt";
+	private String FILE_SLANGWORD = "src/slang.txt";
+	private String TEMPFILE_SLANGWORD = "src/tempfile-slang.txt";
+	private String FILE_HISTORY = "src/history.txt";
+	private String BACKUP_FILE = "src/backup-file.txt";
 	
 	SlangWord() {
-		try {
-			URL FILE_SLANGWORD_URL = getClass().getResource(FILE_SLANGWORD);	
-			FILE_SLANGWORD = FILE_SLANGWORD_URL.getPath();
-			
-			URL FILE_HISTORY_URL = getClass().getResource(FILE_HISTORY);
-			FILE_HISTORY = FILE_HISTORY_URL.getPath();
-
-			URL BACKUP_FILE_URL = getClass().getResource(BACKUP_FILE);
-			BACKUP_FILE = BACKUP_FILE_URL.getPath();
+		try {	
 			readFile(FILE_SLANGWORD);
 			initBackupFile();
 			
@@ -261,36 +253,45 @@ public class SlangWord {
 	}
 	
 	void deleteSlangWord(String slangWord) throws IOException {
-		File inputFile = new File(FILE_SLANGWORD);
-		URL TEMPFILE_SLANGWORD_URL = getClass().getResource(TEMPFILE_SLANGWORD);
-		File tempFile = new File(TEMPFILE_SLANGWORD_URL.getPath());
-
-		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-		BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-
-		String currentLine;
-
-		while((currentLine = reader.readLine()) != null) {
-		    // trim newline when comparing with lineToRemove
-		    String trimmedLine = currentLine.trim();
+		StringBuilder content = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_SLANGWORD))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        
+        String[] lines = content.toString().split(System.lineSeparator());
+        boolean lineFound = false;
+        StringBuilder updatedContent = new StringBuilder();
+        String lineToDelete = "";
+        for (String line : lines) {
+        	String trimmedLine = line.trim();
 		    String[] slangAndMeaning = trimmedLine.split("`");
 		    if ( slangAndMeaning[0].trim().equals(slangWord.trim())) {
-		    	continue;
+		    	lineToDelete = line;
 		    }
-		    writer.write(currentLine + System.getProperty("line.separator"));
-		}
-		writer.close(); 
-		reader.close(); 
-		tempFile.renameTo(inputFile);
-		
-		int indexSlang = 0;
-		for(int i= 0; i < slangMap.size(); i++ ) {
-	        String slangAndMeaning = slangMap.get(i)[0];
-	        if ( slangAndMeaning.trim().equals(slangWord.trim())) {
-	        	indexSlang = i;
-	        }
-		}
-		slangMap.remove(indexSlang);
+            if (!line.equals(lineToDelete)) {
+                updatedContent.append(line).append(System.lineSeparator());
+            } else {
+                lineFound = true;
+            }
+        }
+
+        if (lineFound) {
+            // Write the updated contents back to the file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_SLANGWORD))) {
+                writer.write(updatedContent.toString());
+                System.out.println("Line deleted successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Line not found in the file.");
+        }
 	}
 	
 	void cloneBackupFileToSlangFile() throws IOException {
@@ -357,5 +358,34 @@ public class SlangWord {
 			System.out.println("Bạn trả lời sai mất rồi");
 		}
 		
+	}
+	
+	public void quizDefinition() {
+		String[] randomString = randomSlangWord();
+
+//		List<String[]> listRandomQuiz = new ArrayList<String[]>();
+		
+//		listRandomQuiz.add(randomString);
+		
+		List<List<String>> listRandomQuiz = new ArrayList<>();
+
+		listRandomQuiz.add(Arrays.asList(randomString));
+		for(int i=0; i< 3; i++) {
+//			listRandomQuiz.add(randomSlangWord());
+			listRandomQuiz.add(Arrays.asList(randomSlangWord()));
+		}
+
+		System.out.println("Cho biết Slang của từ sau " + listRandomQuiz.get(0).get(1));
+//		System.out.println("Slang: " + listRandomQuiz.get(0)[0]);
+		for(int i =0 ;i< listRandomQuiz.size(); i++ ) {
+			System.out.println((i + 1) + " " + listRandomQuiz.get(i).get(0));
+		}	
+		System.out.println("Đáp án chính xác là: ");
+		int choose = new Scanner(System.in).nextInt();
+		if ( choose == 1 ) {
+			System.out.println("Bạn trả lời chính xác");
+		}else {
+			System.out.println("Bạn trả lời sai mất rồi");
+		}
 	}
 }
