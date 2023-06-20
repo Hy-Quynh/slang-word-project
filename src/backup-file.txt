@@ -7659,3 +7659,4 @@ ZZZ`Sleepy| bored| tired
 ~`Denotes Sarcasm| Put At The End Of A Word To Make It Longer
 Æ`Registered Trademark Symbol
 YUT2`New YUT2
+new2`new2_des
